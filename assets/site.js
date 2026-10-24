@@ -9,7 +9,8 @@
   function el(t,c,x){ var n=document.createElement(t); if(c) n.className=c; if(x!=null) n.textContent=x; return n; }
   function safeUrl(u){ return /^https?:\/\//i.test(u||'')?u:''; }
   // Pages CMS stores media as a path (e.g. "/media/images/pune.jpg"); accept arrays too.
-  function mediaUrl(v){ if(Array.isArray(v)) v=v[0]; if(!v||typeof v!=='string') return ''; v=v.trim(); if(!v) return ''; if(/^https?:\/\//i.test(v)||v.charAt(0)==='/') return v; return '/'+v; }
+  var PREVIEW={}; // fresh uploads shown from memory until GitHub publishes them
+  function mediaUrl(v){ if(Array.isArray(v)) v=v[0]; if(!v||typeof v!=='string') return ''; v=v.trim(); if(!v) return ''; if(PREVIEW[v]) return PREVIEW[v]; if(/^https?:\/\//i.test(v)||v.charAt(0)==='/') return v; return '/'+v; }
   function img(src,alt){ var i=el('img'); i.src=src; i.alt=alt||''; i.loading='lazy'; i.decoding='async'; return i; }
   var NS='http://www.w3.org/2000/svg';
   function sv(tag,attrs,cls){ var n=document.createElementNS(NS,tag); for(var k in attrs) n.setAttribute(k,attrs[k]); if(cls) n.setAttribute('class',cls); return n; }
@@ -227,13 +228,14 @@
   });
 
   function render(){ renderPhotos(); renderCities(); renderWork(); renderBlogs(); }
+  window.ASite={ state:S, render:render, preview:PREVIEW, mediaUrl:mediaUrl, skyline:skyline, landscape:landscape, hash:hash, loaded:false };
   render(); // placeholders right away, real content once the files load
 
   function load(name){ return fetch('data/'+name+'.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
   Promise.all(['settings','work','blogs','cities','gallery'].map(load)).then(function(res){
     if(res[0]&&typeof res[0]==='object') S.settings=res[0]; if(!S.settings.photos) S.settings.photos={};
     ['work','blogs','cities','gallery'].forEach(function(k,i){ if(Array.isArray(res[i+1])) S[k]=res[i+1]; });
-    render();
+    render(); window.ASite.loaded=true; document.dispatchEvent(new Event('asite:loaded'));
     if(location.hash){ var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
   });
 })();
