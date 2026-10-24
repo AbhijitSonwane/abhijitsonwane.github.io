@@ -6,13 +6,13 @@
       "role": "Equity Research Analyst Intern",
       "org": "RK Advisory & Training",
       "when": "Sep 2025 – May 2026",
-      "points": "Built financial models and valuations for listed auto and EV companies\nWrote initiating coverage reports and investment notes\nLearned to tell the story behind the numbers, not just calculate them"
+      "points": "-Learned that nobody reads a 40-tab model. A one-page dashboard gets more attention than a month of spreadsheet work.\n-Learned to automate anything I have to do twice. Copy-pasting monthly auto sales data builds character, but automation builds free time.\n-Learned annual reports hide the best stories in the footnotes. The headline numbers are the trailer, the notes are the actual movie.\n-Learned that analysis starts where the numbers stop. Anyone can calculate a growth rate, the job is explaining why it happened and whether it will last."
     },
     {
       "role": "Stock Market Trainee",
       "org": "Fin-Tech Education",
       "when": "Jan 2024 – Jul 2024",
-      "points": "Explained stock market courses and their content to prospective students\nBuilt a working base in equity markets and technical analysis"
+      "points": "-Learned derivatives from the founder, then explained them to a room of strangers. Nothing tests your understanding like a question you can't Google mid-presentation.\n-Sold courses in the age of free YouTube. Learned people don't pay for information, they pay for someone who makes it make sense.\n-Turned market basics into a marketing campaign. Realised finance and storytelling are the same job in different outfits."
     }
   ],
   "education": [
@@ -43,11 +43,6 @@
       "color": "#D4A20B"
     },
     {
-      "name": "Python",
-      "short": "Py",
-      "color": "#2F5F8A"
-    },
-    {
       "name": "Google Sheets",
       "short": "S",
       "color": "#1F8F55"
@@ -63,13 +58,13 @@
       "color": "#5B4BC4"
     },
     {
-      "name": "NSE / BSE filings",
-      "short": "₹",
-      "color": "#0F1B2D"
+      "name": "Claude / ChatGPT",
+      "short": "AI",
+      "color": "#2563EB"
     }
   ],
   "certsTitle": "NISM Certifications",
   "certs": "Equity Derivatives\nSecurities Operations & Risk Management\nMutual Fund Distributors\nSecurities Markets Foundation\nAlternative Investment Funds",
-  "quote": "A model is only as good as the assumption you can defend in the room.",
+  "quote": "",
   "quoteBy": "Abhijit Sonwane"
 }
