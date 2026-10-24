@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Pune",
+    "note": "Home base",
+    "home": true,
+    "photo": ""
+  },
+  {
+    "name": "Bengaluru",
+    "note": "Open to relocate",
+    "home": false,
+    "photo": ""
+  },
+  {
+    "name": "Delhi NCR",
+    "note": "Gurugram · Noida",
+    "home": false,
+    "photo": ""
+  }
+]

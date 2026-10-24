@@ -1,0 +1,191 @@
+# Pages CMS setup: https://pagescms.org/docs/configuration
+# Edit your site at https://app.pagescms.org (sign in with GitHub).
+media:
+  - name: images
+    label: Photos
+    input: media/images
+    output: /media/images
+    rename: safe
+    extensions: [jpg, jpeg, png, webp]
+  - name: docs
+    label: Reports and resume (PDF)
+    input: media/docs
+    output: /media/docs
+    rename: safe
+    extensions: [pdf]
+
+content:
+  - name: work
+    label: Research and projects
+    type: file
+    path: data/work.json
+    format: json
+    list: true
+    fields:
+      - name: section
+        label: Show it under
+        type: select
+        required: true
+        options:
+          values:
+            - name: research
+              label: Research
+            - name: projects
+              label: Projects
+      - name: category
+        label: Category
+        type: string
+        description: "Creates the filter tabs. Use one of: Company Report, Sector Report, Financial Model, Case Study, Startup Case Study, Side Project (or a new one)."
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: summary
+        label: Summary (one or two lines)
+        type: text
+      - name: date
+        label: Date
+        type: string
+        description: "For example: Oct 2026"
+      - name: tags
+        label: Tags
+        type: string
+        description: "Separate with commas, for example: DCF, WACC"
+      - name: keyNumber
+        label: Key number (optional)
+        type: string
+        description: "For example: 10-year. Don't put buy/sell ratings or target prices here."
+      - name: keyLabel
+        label: Label for the key number
+        type: string
+        description: "For example: Forecast period"
+      - name: link
+        label: Link (Google Drive, LinkedIn post, etc.)
+        type: string
+        description: "Must start with https://. Use this for Excel files."
+      - name: cover
+        label: Cover photo
+        type: image
+        options:
+          media: images
+      - name: report
+        label: Report (PDF)
+        type: file
+        options:
+          media: docs
+
+  - name: blogs
+    label: Blogs
+    type: file
+    path: data/blogs.json
+    format: json
+    list: true
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: tag
+        label: Topic tag
+        type: string
+        description: "For example: What I Learned"
+      - name: date
+        label: Date
+        type: string
+        description: "For example: Oct 2026"
+      - name: mins
+        label: Read time (minutes)
+        type: number
+      - name: summary
+        label: Short summary
+        type: text
+      - name: body
+        label: Full post
+        type: text
+        description: "Leave a blank line between paragraphs."
+      - name: link
+        label: Link instead of full text (optional)
+        type: string
+        description: "For example, your LinkedIn article. Must start with https://"
+      - name: cover
+        label: Cover photo
+        type: image
+        options:
+          media: images
+
+  - name: cities
+    label: Where I'm open to work
+    type: file
+    path: data/cities.json
+    format: json
+    list: true
+    fields:
+      - name: name
+        label: City
+        type: string
+        required: true
+      - name: note
+        label: Note
+        type: string
+        description: "For example: Home base, or Gurugram · Noida"
+      - name: home
+        label: This is my home base
+        type: boolean
+      - name: photo
+        label: City photo
+        type: image
+        options:
+          media: images
+
+  - name: gallery
+    label: About photo gallery
+    type: file
+    path: data/gallery.json
+    format: json
+    list: true
+    fields:
+      - name: photo
+        label: Photo
+        type: image
+        required: true
+        options:
+          media: images
+      - name: caption
+        label: Caption (optional)
+        type: string
+
+  - name: settings
+    label: Your photos, resume and section photos
+    type: file
+    path: data/settings.json
+    format: json
+    fields:
+      - name: heroPhoto
+        label: Main photo (top of the page)
+        type: image
+        description: "Leave empty to show the cat."
+        options:
+          media: images
+      - name: aboutPhoto
+        label: About photo
+        type: image
+        options:
+          media: images
+      - name: resume
+        label: Resume (PDF) for the Download Resume buttons
+        type: file
+        options:
+          media: docs
+      - name: photos
+        label: Section background photos (wide landscape photos work best)
+        type: object
+        fields:
+          - { name: about, label: About, type: image, options: { media: images } }
+          - { name: open, label: Open to work, type: image, options: { media: images } }
+          - { name: research, label: Research, type: image, options: { media: images } }
+          - { name: projects, label: Projects, type: image, options: { media: images } }
+          - { name: resume, label: Resume, type: image, options: { media: images } }
+          - { name: quote, label: Resume quote card, type: image, options: { media: images } }
+          - { name: blogs, label: Blogs, type: image, options: { media: images } }
+          - { name: goals, label: Goals, type: image, options: { media: images } }
+          - { name: contact, label: Contact, type: image, options: { media: images } }
