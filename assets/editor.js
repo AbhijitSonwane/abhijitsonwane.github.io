@@ -180,6 +180,20 @@
    +'<p class="note">Excel files: upload to Google Drive and paste the share link above.</p><p class="status" id="wSt"></p>'
    +'<div class="row-actions"><button class="btn btn-light btn-sm" type="button" id="wCancel">Cancel</button><button class="btn btn-dark btn-sm" type="submit" id="wSave">Save to list</button></div></form>'
    +'<div class="list" id="eWList"></div></div>'
+   +'<div class="ed-sec"><h3>Resume section</h3>'
+   +'<div class="f"><label><span>Heading (press Enter for a new line)</span><textarea id="rHead" style="min-height:60px"></textarea></label>'
+   +'<label><span>Line under the heading</span><input id="rSub" type="text"></label></div>'
+   +'<h4 style="margin:6px 0 0;font-size:15px">Experience</h4><div id="rExp" style="display:grid;gap:10px"></div>'
+   +'<div class="row-actions" style="justify-content:flex-start"><button class="btn btn-light btn-sm" id="rExpAdd" type="button">Add a job or internship</button></div>'
+   +'<h4 style="margin:6px 0 0;font-size:15px">Education</h4><div class="list" id="rEdu"></div>'
+   +'<div class="row-actions" style="justify-content:flex-start"><button class="btn btn-light btn-sm" id="rEduAdd" type="button">Add education</button></div>'
+   +'<div class="f"><label><span>Skills (separate with commas)</span><textarea id="rSkills" style="min-height:70px"></textarea></label></div>'
+   +'<h4 style="margin:6px 0 0;font-size:15px">Tools</h4><p class="note">Short label is the 1–2 letters on the coloured tile.</p><div class="list" id="rTools"></div>'
+   +'<div class="row-actions" style="justify-content:flex-start"><button class="btn btn-light btn-sm" id="rToolAdd" type="button">Add a tool</button></div>'
+   +'<div class="f"><label><span>Certifications title</span><input id="rCertT" type="text"></label>'
+   +'<label><span>Certifications (one per line)</span><textarea id="rCerts" style="min-height:110px"></textarea></label>'
+   +'<label><span>Quote (leave empty to hide the quote card)</span><input id="rQuote" type="text"></label>'
+   +'<label><span>Quote by</span><input id="rQuoteBy" type="text"></label></div></div>'
    +'<div class="ed-sec"><h3>Blogs</h3><div class="row-actions" style="justify-content:flex-start"><button class="btn btn-dark btn-sm" id="eBNew" type="button">Write a new post</button></div>'
    +'<form class="f" id="eBForm" hidden>'
    +'<label><span>Title</span><input id="bTitle" type="text" placeholder="What a financial model really taught me"></label>'
@@ -327,7 +341,44 @@
     list.forEach(function(p,idx){ b.appendChild(row(p.title,[p.date,p.tag].filter(Boolean).join(' · ')||'Post',function(){ openBlog(p); },
       idx>0?upBtn(list,idx,p.title,function(){ changed('blogs'); renderBlogs(); }):null,function(){ list.splice(list.indexOf(p),1); changed('blogs'); renderBlogs(); })); }); }
 
-  function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); }
+
+  // resume section
+  function R(){ var st=S(); if(!st.resume) st.resume={experience:[],education:[],tools:[]}; ['experience','education','tools'].forEach(function(k){ if(!Array.isArray(st.resume[k])) st.resume[k]=[]; }); return st.resume; }
+  function bindText(id,key){ $(id).addEventListener('change',function(){ R()[key]=this.value.trim(); changed('resume'); }); }
+  bindText('rHead','heading'); bindText('rSub','subtitle'); bindText('rSkills','skills'); bindText('rCertT','certsTitle'); bindText('rCerts','certs'); bindText('rQuote','quote'); bindText('rQuoteBy','quoteBy');
+  function inp(val,ph,label,fn,tag){ var i=el(tag||'input'); if(!tag) i.type='text'; i.value=val||''; i.placeholder=ph||''; i.setAttribute('aria-label',label); i.addEventListener('change',function(){ fn(this.value.trim()); changed('resume'); }); return i; }
+  function renderResumeEd(){
+    var r=R(); $('rHead').value=r.heading||''; $('rSub').value=r.subtitle||''; $('rSkills').value=r.skills||''; $('rCertT').value=r.certsTitle||''; $('rCerts').value=r.certs||''; $('rQuote').value=r.quote||''; $('rQuoteBy').value=r.quoteBy||'';
+    var ex=$('rExp'); ex.textContent='';
+    r.experience.forEach(function(x,idx){
+      var f=el('div','f');
+      var two=el('div','two'); var l1=el('label'); l1.appendChild(el('span',null,'Role')); l1.appendChild(inp(x.role,'Financial Analyst','Role',function(v){ x.role=v; })); two.appendChild(l1);
+      var l2=el('label'); l2.appendChild(el('span',null,'Company')); l2.appendChild(inp(x.org,'Company name','Company',function(v){ x.org=v; })); two.appendChild(l2); f.appendChild(two);
+      var l3=el('label'); l3.appendChild(el('span',null,'Dates')); l3.appendChild(inp(x.when,'Jun 2026 – Present','Dates',function(v){ x.when=v; })); f.appendChild(l3);
+      var l4=el('label'); l4.appendChild(el('span',null,'Points (one per line)')); var ta=inp(x.points,'What you did and learned','Points',function(v){ x.points=v; },'textarea'); l4.appendChild(ta); f.appendChild(l4);
+      var a=el('div','row-actions'); a.style.justifyContent='flex-start';
+      if(idx>0) a.appendChild(upBtn(r.experience,idx,x.role||'job',function(){ changed('resume'); renderResumeEd(); }));
+      var d=el('button','mini del','Remove'); d.type='button'; confirmBtn(d,function(){ r.experience.splice(idx,1); changed('resume'); renderResumeEd(); }); a.appendChild(d); f.appendChild(a);
+      ex.appendChild(f);
+    });
+    var eu=$('rEdu'); eu.textContent='';
+    r.education.forEach(function(x,idx){ var row=el('div','erow'); row.style.gridTemplateColumns='minmax(0,1fr) auto';
+      var fl=el('div','fields'); fl.appendChild(inp(x.degree,'MBA (Finance)','Degree',function(v){ x.degree=v; })); fl.appendChild(inp(x.when,'2023 – 2025','Years',function(v){ x.when=v; })); row.appendChild(fl);
+      var a=el('div','acts'); if(idx>0) a.appendChild(upBtn(r.education,idx,x.degree||'item',function(){ changed('resume'); renderResumeEd(); }));
+      var d=el('button','mini del','Remove'); d.type='button'; confirmBtn(d,function(){ r.education.splice(idx,1); changed('resume'); renderResumeEd(); }); a.appendChild(d); row.appendChild(a); eu.appendChild(row); });
+    var tl=$('rTools'); tl.textContent='';
+    r.tools.forEach(function(t,idx){ var row=el('div','erow'); row.style.gridTemplateColumns='48px minmax(0,1fr) auto';
+      var col=el('input'); col.type='color'; col.value=/^#[0-9a-f]{6}$/i.test(t.color||'')?t.color:'#0F1B2D'; col.setAttribute('aria-label','Tile colour for '+(t.name||'tool')); col.style.cssText='width:44px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff';
+      col.addEventListener('change',function(){ t.color=this.value; changed('resume'); }); row.appendChild(col);
+      var fl=el('div','fields'); fl.appendChild(inp(t.name,'Excel','Tool name',function(v){ t.name=v; })); fl.appendChild(inp(t.short,'X','Short label',function(v){ t.short=v.slice(0,3); })); row.appendChild(fl);
+      var a=el('div','acts'); if(idx>0) a.appendChild(upBtn(r.tools,idx,t.name||'tool',function(){ changed('resume'); renderResumeEd(); }));
+      var d=el('button','mini del','Remove'); d.type='button'; confirmBtn(d,function(){ r.tools.splice(idx,1); changed('resume'); renderResumeEd(); }); a.appendChild(d); row.appendChild(a); tl.appendChild(row); });
+  }
+  $('rExpAdd').addEventListener('click',function(){ R().experience.unshift({role:'',org:'',when:'',points:''}); changed('resume'); renderResumeEd(); var f=$('rExp').querySelector('input'); if(f) f.focus(); });
+  $('rEduAdd').addEventListener('click',function(){ R().education.push({degree:'',when:''}); changed('resume'); renderResumeEd(); var ins=$('rEdu').querySelectorAll('input'); if(ins.length) ins[ins.length-2].focus(); });
+  $('rToolAdd').addEventListener('click',function(){ R().tools.push({name:'',short:'',color:'#2563EB'}); changed('resume'); renderResumeEd(); var ins=$('rTools').querySelectorAll('input[type=text]'); if(ins.length) ins[ins.length-2].focus(); });
+
+  function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); renderResumeEd(); }
 
   // publish
   $('pubBtn').addEventListener('click',function(){

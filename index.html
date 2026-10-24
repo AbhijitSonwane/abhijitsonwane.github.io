@@ -153,8 +153,8 @@
   <div class="media bmedia" data-sec="resume"></div>
   <div class="wrap">
     <div class="head">
-      <div class="headtxt"><span class="eyebrow">Resume</span><h2>Experience, Key Learnings<br>and What It Taught Me</h2>
-        <p class="sub">A summary of my education and experience, with the lessons from each.</p></div>
+      <div class="headtxt"><span class="eyebrow">Resume</span><h2 id="resHead">Experience, Key Learnings<br>and What It Taught Me</h2>
+        <p class="sub" id="resSub">A summary of my education and experience, with the lessons from each.</p></div>
       <div class="cta" style="margin-top:0">
         <a class="btn btn-dark" id="resumeBtn" href="#contact"><svg class="ico"><use href="#i-down"/></svg> <span id="resumeBtnTxt">Resume on request</span></a>
         <a class="btn btn-light" href="https://www.linkedin.com/in/abhijit-sonwane" target="_blank" rel="noopener"><svg class="ico"><use href="#i-link"/></svg> View on LinkedIn</a>
@@ -163,43 +163,20 @@
     <div class="resume">
       <div>
         <h3><svg class="ico"><use href="#i-brief"/></svg>Experience</h3>
-        <ul class="tl">
-          <li><h4>Equity Research Analyst Intern</h4><div class="org">RK Advisory &amp; Training</div><div class="when">Sep 2025 – May 2026</div>
-            <ul><li>Built financial models and valuations for listed auto and EV companies</li><li>Wrote initiating coverage reports and investment notes</li><li>Learned to tell the story behind the numbers, not just calculate them</li></ul></li>
-          <li><h4>Stock Market Trainee</h4><div class="org">Fin-Tech Education</div><div class="when">Jan 2024 – Jul 2024</div>
-            <ul><li>Explained stock market courses and their content to prospective students</li><li>Built a working base in equity markets and technical analysis</li></ul></li>
-        </ul>
+        <ul class="tl" id="resExp"></ul>
         <h3 style="margin-top:8px"><svg class="ico"><use href="#i-cap"/></svg>Education</h3>
-        <ul class="tl">
-          <li><h4>MBA (Finance &amp; International Trade)</h4><div class="when">2023 – 2025</div></li>
-          <li><h4>B.Com</h4><div class="when">Completed 2021</div></li>
-        </ul>
+        <ul class="tl" id="resEdu"></ul>
       </div>
       <div>
         <h3><svg class="ico"><use href="#i-star"/></svg>Skills</h3>
-        <div class="skills"><span>Financial Modelling</span><span>3-Statement Models</span><span>Valuation (DCF, Comps)</span><span>WACC</span><span>Scenario &amp; Sensitivity</span><span>Equity Research</span><span>Credit Analysis</span><span>Cash Runway</span><span>XIRR</span><span>Ratio Analysis</span><span>Research Writing</span><span>Industry Analysis</span></div>
+        <div class="skills" id="resSkills"></div>
         <h3 style="margin-top:28px"><svg class="ico"><use href="#i-tools"/></svg>Tools</h3>
-        <div class="tools">
-          <div class="tool"><span class="tile" style="background:#1E7A45">X</span>Excel</div>
-          <div class="tool"><span class="tile" style="background:#C2501F">P</span>PowerPoint</div>
-          <div class="tool"><span class="tile" style="background:#D4A20B">BI</span>Power BI</div>
-          <div class="tool"><span class="tile" style="background:#2F5F8A">Py</span>Python</div>
-          <div class="tool"><span class="tile" style="background:#1F8F55">S</span>Google Sheets</div>
-          <div class="tool"><span class="tile" style="background:#344055">W</span>Word</div>
-          <div class="tool"><span class="tile" style="background:#5B4BC4">AI</span>AI for Excel</div>
-          <div class="tool"><span class="tile" style="background:#0F1B2D">₹</span>NSE / BSE filings</div>
+        <div class="tools" id="resTools"></div>
+        <div class="certs" id="resCertsWrap">
+          <h3><svg class="ico"><use href="#i-shield"/></svg><span id="resCertsTitle">NISM Certifications</span></h3>
+          <ul id="resCerts"></ul>
         </div>
-        <div class="certs">
-          <h3><svg class="ico"><use href="#i-shield"/></svg>NISM Certifications</h3>
-          <ul>
-            <li><svg class="ico"><use href="#i-check"/></svg>Equity Derivatives</li>
-            <li><svg class="ico"><use href="#i-check"/></svg>Securities Operations &amp; Risk Management</li>
-            <li><svg class="ico"><use href="#i-check"/></svg>Mutual Fund Distributors</li>
-            <li><svg class="ico"><use href="#i-check"/></svg>Securities Markets Foundation</li>
-            <li><svg class="ico"><use href="#i-check"/></svg>Alternative Investment Funds</li>
-          </ul>
-        </div>
-        <div class="quote"><div class="media" data-sec="quote"></div><blockquote>“A model is only as good as the assumption you can defend in the room.”<cite>Abhijit Sonwane</cite></blockquote></div>
+        <div class="quote" id="resQuoteWrap"><div class="media" data-sec="quote"></div><blockquote><span id="resQuote">“A model is only as good as the assumption you can defend in the room.”</span><cite id="resQuoteBy">Abhijit Sonwane</cite></blockquote></div>
       </div>
     </div>
   </div>

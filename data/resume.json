@@ -1,0 +1,75 @@
+{
+  "heading": "Experience, Key Learnings\nand What It Taught Me",
+  "subtitle": "A summary of my education and experience, with the lessons from each.",
+  "experience": [
+    {
+      "role": "Equity Research Analyst Intern",
+      "org": "RK Advisory & Training",
+      "when": "Sep 2025 – May 2026",
+      "points": "Built financial models and valuations for listed auto and EV companies\nWrote initiating coverage reports and investment notes\nLearned to tell the story behind the numbers, not just calculate them"
+    },
+    {
+      "role": "Stock Market Trainee",
+      "org": "Fin-Tech Education",
+      "when": "Jan 2024 – Jul 2024",
+      "points": "Explained stock market courses and their content to prospective students\nBuilt a working base in equity markets and technical analysis"
+    }
+  ],
+  "education": [
+    {
+      "degree": "MBA (Finance & International Trade)",
+      "when": "2023 – 2025"
+    },
+    {
+      "degree": "B.Com",
+      "when": "Completed 2021"
+    }
+  ],
+  "skills": "Financial Modelling, 3-Statement Models, Valuation (DCF, Comps), WACC, Scenario & Sensitivity, Equity Research, Credit Analysis, Cash Runway, XIRR, Ratio Analysis, Research Writing, Industry Analysis",
+  "tools": [
+    {
+      "name": "Excel",
+      "short": "X",
+      "color": "#1E7A45"
+    },
+    {
+      "name": "PowerPoint",
+      "short": "P",
+      "color": "#C2501F"
+    },
+    {
+      "name": "Power BI",
+      "short": "BI",
+      "color": "#D4A20B"
+    },
+    {
+      "name": "Python",
+      "short": "Py",
+      "color": "#2F5F8A"
+    },
+    {
+      "name": "Google Sheets",
+      "short": "S",
+      "color": "#1F8F55"
+    },
+    {
+      "name": "Word",
+      "short": "W",
+      "color": "#344055"
+    },
+    {
+      "name": "AI for Excel",
+      "short": "AI",
+      "color": "#5B4BC4"
+    },
+    {
+      "name": "NSE / BSE filings",
+      "short": "₹",
+      "color": "#0F1B2D"
+    }
+  ],
+  "certsTitle": "NISM Certifications",
+  "certs": "Equity Derivatives\nSecurities Operations & Risk Management\nMutual Fund Distributors\nSecurities Markets Foundation\nAlternative Investment Funds",
+  "quote": "A model is only as good as the assumption you can defend in the room.",
+  "quoteBy": "Abhijit Sonwane"
+}
