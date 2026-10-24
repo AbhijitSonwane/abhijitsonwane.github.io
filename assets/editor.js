@@ -156,6 +156,7 @@
   ed.innerHTML='<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="eTitle">'
    +'<div class="sheet-head"><h2 id="eTitle" style="font-size:26px">Edit your site</h2><button class="btn btn-light btn-sm" id="eClose" type="button">Close</button></div>'
    +'<p class="note">Changes show on the page right away. Press <b>Publish</b> to put them live for everyone (takes about a minute).</p>'
+   +'<div class="ed-sec"><h3>Page text</h3><p class="note">Change any fixed text on the page. Clear a box to go back to the original text.</p><div id="eText" style="display:grid;gap:12px"></div></div>'
    +'<div class="ed-sec"><h3>Your photos and resume</h3><div class="f">'
    +'<div class="two"><label><span>Main photo (top of the page)</span><input id="eHero" type="file" accept=".jpg,.jpeg,.png,.webp"></label><label><span>About photo</span><input id="eAbout" type="file" accept=".jpg,.jpeg,.png,.webp"></label></div>'
    +'<div class="row-actions" style="justify-content:flex-start"><button class="mini del" id="eHeroRm" type="button">Use cat for main photo</button><button class="mini del" id="eAboutRm" type="button">Use cat for about photo</button></div>'
@@ -378,7 +379,31 @@
   $('rEduAdd').addEventListener('click',function(){ R().education.push({degree:'',when:''}); changed('resume'); renderResumeEd(); var ins=$('rEdu').querySelectorAll('input'); if(ins.length) ins[ins.length-2].focus(); });
   $('rToolAdd').addEventListener('click',function(){ R().tools.push({name:'',short:'',color:'#2563EB'}); changed('resume'); renderResumeEd(); var ins=$('rTools').querySelectorAll('input[type=text]'); if(ins.length) ins[ins.length-2].focus(); });
 
-  function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); renderResumeEd(); }
+
+  // page text
+  function renderTextEd(){
+    var box=$('eText'); box.textContent=''; var st=S(); if(!st.text) st.text={}; var T=st.text, D=A().textDefault||{};
+    var groups={}, order=[];
+    document.querySelectorAll('#app [data-edit], body > section [data-edit], [data-edit]').forEach(function(n){
+      if(n.closest('.overlay')) return; var g=n.getAttribute('data-group')||'Other', k=n.getAttribute('data-edit');
+      if(!groups[g]){ groups[g]=[]; order.push(g); } if(groups[g].some(function(x){ return x.k===k; })) return;
+      groups[g].push({k:k,label:n.getAttribute('data-label')||k,long:(D[k]||'').length>70||/\n/.test(D[k]||'')});
+    });
+    order.forEach(function(g){
+      var d=el('details','f'); var sm=el('summary',null,g); sm.style.cssText='cursor:pointer;font-weight:600;font-size:15px'; d.appendChild(sm);
+      var inner=el('div'); inner.style.cssText='display:grid;gap:10px;margin-top:10px';
+      groups[g].forEach(function(f){
+        var l=el('label'); l.appendChild(el('span',null,f.label));
+        var i=el(f.long?'textarea':'input'); if(!f.long) i.type='text'; else i.style.minHeight='70px';
+        i.value=(typeof T[f.k]==='string'&&T[f.k].trim())?T[f.k]:(D[f.k]||'');
+        i.addEventListener('change',function(){ var v=this.value.trim(); if(!v||v===D[f.k]){ delete T[f.k]; if(!v) this.value=D[f.k]||''; } else T[f.k]=v; changed('text'); });
+        l.appendChild(i); inner.appendChild(l);
+      });
+      d.appendChild(inner); box.appendChild(d);
+    });
+  }
+
+  function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); renderResumeEd(); renderTextEd(); }
 
   // publish
   $('pubBtn').addEventListener('click',function(){

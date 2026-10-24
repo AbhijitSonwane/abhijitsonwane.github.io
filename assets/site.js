@@ -3,7 +3,7 @@
    Photos and PDFs live in /media. This file only reads and displays them. */
 (function(){
   var $=function(id){ return document.getElementById(id); };
-  var S={ settings:{photos:{}}, work:[], blogs:[], cities:[], gallery:[] };
+  var S={ settings:{photos:{}}, work:[], blogs:[], cities:[], gallery:[], text:{} };
   var rFilter='All', pFilter='All', query='';
 
   function el(t,c,x){ var n=document.createElement(t); if(c) n.className=c; if(x!=null) n.textContent=x; return n; }
@@ -246,15 +246,29 @@
     $('resQuoteWrap').hidden=!R.quote; $('resQuote').textContent=R.quote?'“'+R.quote.replace(/^[“"]|[”"]$/g,'')+'”':''; $('resQuoteBy').textContent=R.quoteBy||'';
   }
 
-  function render(){ renderPhotos(); renderCities(); renderWork(); renderBlogs(); renderResume(); }
-  window.ASite={ state:S, render:render, preview:PREVIEW, mediaUrl:mediaUrl, skyline:skyline, landscape:landscape, hash:hash, loaded:false };
+  // ---------- editable page text ----------
+  function readText(n){ var out=''; n.childNodes.forEach(function(c){ if(c.nodeType===3) out+=c.nodeValue; else if(c.nodeName==='BR') out+='\n'; else out+=c.textContent; }); return out.replace(/[ \t]+\n/g,'\n').trim(); }
+  var TEXT_DEFAULT={};
+  document.querySelectorAll('[data-edit]').forEach(function(n){ TEXT_DEFAULT[n.getAttribute('data-edit')]=readText(n); });
+  function renderText(){
+    var T=S.text||{};
+    document.querySelectorAll('[data-edit]').forEach(function(n){
+      var k=n.getAttribute('data-edit'), v=(typeof T[k]==='string'&&T[k].trim())?T[k]:TEXT_DEFAULT[k];
+      if(readText(n)===v) return;
+      n.textContent=''; String(v).split('\n').forEach(function(line,i){ if(i) n.appendChild(el('br')); n.appendChild(document.createTextNode(line)); });
+    });
+  }
+
+  function render(){ renderPhotos(); renderCities(); renderWork(); renderBlogs(); renderResume(); renderText(); }
+  window.ASite={ state:S, render:render, textDefault:TEXT_DEFAULT, preview:PREVIEW, mediaUrl:mediaUrl, skyline:skyline, landscape:landscape, hash:hash, loaded:false };
   render(); // placeholders right away, real content once the files load
 
   function load(name){ return fetch('data/'+name+'.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); }
-  Promise.all(['settings','work','blogs','cities','gallery','resume'].map(load)).then(function(res){
+  Promise.all(['settings','work','blogs','cities','gallery','resume','text'].map(load)).then(function(res){
     if(res[0]&&typeof res[0]==='object') S.settings=res[0]; if(!S.settings.photos) S.settings.photos={};
     ['work','blogs','cities','gallery'].forEach(function(k,i){ if(Array.isArray(res[i+1])) S[k]=res[i+1]; });
     if(res[5]&&typeof res[5]==='object') S.resume=res[5];
+    if(res[6]&&typeof res[6]==='object') S.text=res[6];
     render(); window.ASite.loaded=true; document.dispatchEvent(new Event('asite:loaded'));
     if(location.hash){ var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
   });
