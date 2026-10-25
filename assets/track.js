@@ -36,16 +36,17 @@
   function track(type,label){ send({type:type,label:label}); }
   window.ASTrack=track;
 
-  fetch('data/analytics.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).then(function(c){
+  fetch('/data/analytics.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).then(function(c){
     if(!c||!c.url||!c.key) return; cfg=c; var q=queue; queue=[]; q.forEach(send);
   }).catch(function(){});
 
-  if(!store('sessionStorage','as-visit')){ store('sessionStorage','as-visit','1'); track('visit',location.hash||'home'); }
+  if(!store('sessionStorage','as-visit')){ store('sessionStorage','as-visit','1'); track('visit',location.pathname.length>1?location.pathname.replace(/^\/work\/|\/$/g,''):(location.hash||'home')); }
 
   document.addEventListener('click',function(e){
     var t=e.target.closest&&e.target.closest('a,button'); if(!t) return;
     if(t.id==='heroResume'||t.id==='resumeBtn'){ if(/\.pdf/i.test(t.getAttribute('href')||'')) track('resume',t.id==='heroResume'?'top of page':'resume section'); return; }
     if(t.classList.contains('copy')){ var k=t.getAttribute('data-copy')||''; track('copy',k==='v-email'?'email':k==='v-phone'?'phone':k==='v-li'?'linkedin':k); return; }
+    var dt=t.getAttribute('data-track'); if(dt){ var h1=document.querySelector('h1'); track(dt,h1?h1.textContent:''); return; }
     var card=t.closest('.card');
     if(card&&t.classList.contains('round')){ var title=(card.querySelector('h3')||{}).textContent||''; track(/file/.test(t.innerHTML)?'report':'link',title); return; }
     if(t.tagName==='A'&&/linkedin\.com/.test(t.href||'')){ track('link','LinkedIn profile'); }

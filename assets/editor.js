@@ -174,6 +174,7 @@
    +'<label id="wNewCatW" hidden><span>New category name</span><input id="wNewCat" type="text" placeholder="Credit Note"></label>'
    +'<label><span>Title</span><input id="wTitle" type="text" placeholder="Tata Motors"></label>'
    +'<label><span>Summary (one or two lines)</span><textarea id="wSum"></textarea></label>'
+   +'<label><span>Full write-up for its own page (optional): the problem, what you found, your view. Leave a blank line between paragraphs.</span><textarea id="wWrite" style="min-height:180px"></textarea></label>'
    +'<div class="two"><label><span>Date</span><input id="wDate" type="text" placeholder="Oct 2026"></label><label><span>Tags (commas)</span><input id="wTags" type="text" placeholder="DCF, WACC"></label></div>'
    +'<div class="two"><label><span>Key number (optional)</span><input id="wNum" type="text" placeholder="10-year"></label><label><span>Its label</span><input id="wNumL" type="text" placeholder="Forecast period"></label></div>'
    +'<p class="note">Keep buy/sell ratings and target prices inside the PDF report, not on the card.</p>'
@@ -287,7 +288,7 @@
   function openWork(it){
     wItem=it; wCover=it?it.cover||'':''; wRep=it?it.report||'':'';
     $('wSec').value=it?it.section||'research':'research'; fillCats($('wSec').value,it&&it.category);
-    $('wNewCat').value=''; $('wTitle').value=it?it.title:''; $('wSum').value=it?it.summary||'':''; $('wDate').value=it?it.date||'':''; $('wTags').value=it?it.tags||'':'';
+    $('wNewCat').value=''; $('wTitle').value=it?it.title:''; $('wSum').value=it?it.summary||'':''; $('wWrite').value=it?it.writeup||'':''; $('wDate').value=it?it.date||'':''; $('wTags').value=it?it.tags||'':'';
     $('wNum').value=it?it.keyNumber||'':''; $('wNumL').value=it?it.keyLabel||'':''; $('wLink').value=it?it.link||'':''; $('wCover').value=''; $('wRep').value='';
     msg($('wSt'),'',[wCover?'Has a cover photo':'',wRep?'Has a report attached':''].filter(Boolean).join(' · '));
     $('wSave').textContent=it?'Update in list':'Save to list'; $('eWForm').hidden=false; $('wTitle').focus();
@@ -305,12 +306,24 @@
     var cat=$('wCat').value; if(cat==='__new'){ cat=$('wNewCat').value.trim(); if(!cat) return msg(st,'err','Name the new category.'); }
     var link=$('wLink').value.trim(); if(!okLink(link)) return msg(st,'err','Links must start with https://');
     var it={section:$('wSec').value,category:cat,title:title,summary:$('wSum').value.trim(),date:$('wDate').value.trim(),tags:$('wTags').value.trim(),
-      keyNumber:$('wNum').value.trim(),keyLabel:$('wNumL').value.trim(),link:link,cover:wCover,report:wRep};
+      keyNumber:$('wNum').value.trim(),keyLabel:$('wNumL').value.trim(),link:link,cover:wCover,report:wRep,writeup:$('wWrite').value.trim()};
+    if(wItem&&wItem.slug) it.slug=wItem.slug;
     var list=S().work; if(wItem){ list[list.indexOf(wItem)]=it; } else list.unshift(it);
+    if(window.ASPages) window.ASPages.assignSlugs(list);
     $('eWForm').hidden=true; changed('work'); renderWork(); });
-  function row(title,sub,onEdit,upEl,onDel){ var r=el('div','row'), info=el('div'); info.appendChild(el('div','t',title)); info.appendChild(el('div','c',sub)); r.appendChild(info);
-    var a=el('div','acts'); if(upEl) a.appendChild(upEl); var e=el('button','mini','Edit'); e.type='button'; e.addEventListener('click',onEdit); a.appendChild(e);
+  function row(title,sub,onEdit,upEl,onDel,extra){ var r=el('div','row'), info=el('div'); info.appendChild(el('div','t',title)); info.appendChild(el('div','c',sub)); r.appendChild(info);
+    var a=el('div','acts'); if(extra) a.appendChild(extra); if(upEl) a.appendChild(upEl); var e=el('button','mini','Edit'); e.type='button'; e.addEventListener('click',onEdit); a.appendChild(e);
     var d=el('button','mini del','Remove'); d.type='button'; confirmBtn(d,onDel); a.appendChild(d); r.appendChild(a); return r; }
+  function shareBtn(it){
+    var c=el('button','mini','Copy LinkedIn link'); c.type='button';
+    c.addEventListener('click',function(){
+      if(!window.ASPages) return; if(!it.slug){ window.ASPages.assignSlugs(S().work); changed('work'); }
+      var url=window.ASPages.shareUrl(it), note=dirty.work?' Press Publish first so the page exists.':'';
+      function done(){ c.textContent='Copied'; setTimeout(function(){ c.textContent='Copy LinkedIn link'; },1800); toast('Link copied: '+url+note); }
+      try{ navigator.clipboard.writeText(url).then(done,function(){ toast('Your link: '+url+note); }); }catch(e){ toast('Your link: '+url+note); }
+    });
+    return c;
+  }
   function renderWork(){
     var b=$('eWList'); b.textContent=''; var list=S().work;
     [['research','Research'],['projects','Projects']].forEach(function(sx){
@@ -319,7 +332,7 @@
       idxs.forEach(function(i,n){ var it=list[i];
         var up=null; if(n>0){ up=el('button','mini','↑'); up.type='button'; up.setAttribute('aria-label','Move '+it.title+' up');
           up.addEventListener('click',function(){ var j=idxs[n-1], t=list[j]; list[j]=list[i]; list[i]=t; changed('work'); renderWork(); }); }
-        b.appendChild(row(it.title,(it.category||'')+(it.cover?' · cover photo':'')+(it.report?' · report':''),function(){ openWork(it); },up,function(){ list.splice(list.indexOf(it),1); changed('work'); renderWork(); }));
+        b.appendChild(row(it.title,(it.category||'')+(it.cover?' · cover photo':'')+(it.report?' · report':''),function(){ openWork(it); },up,function(){ list.splice(list.indexOf(it),1); changed('work'); renderWork(); },shareBtn(it)));
       });
     });
   }
@@ -465,11 +478,29 @@
 
   function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); renderResumeEd(); renderTextEd(); renderStats(); }
 
+  // shareable work pages
+  function getFile(path){ return fetch(API+'/contents/'+enc(path)+'?ref='+BRANCH,{headers:headers(),cache:'no-store'}).then(function(r){ if(r.status===404) return null; if(!r.ok) return ghError(r).then(function(e){ throw e; });
+    return r.json().then(function(j){ var b=fromB64(String(j.content||'').replace(/\s/g,'')); return {sha:j.sha,text:new TextDecoder().decode(b)}; }); }); }
+  function publishPages(st){
+    if(!window.ASPages) return Promise.resolve();
+    var items=S().work, chain=Promise.resolve();
+    items.forEach(function(it){ if(!it.title||!it.slug) return; chain=chain.then(function(){
+      var path='work/'+it.slug+'/index.html', html=window.ASPages.build(it,S().settings);
+      return getFile(path).then(function(cur){ if(cur&&cur.text===html) return; msg(st,'','Updating the page for '+it.title+'…');
+        var body={message:'Update page for '+it.title,content:textB64(html),branch:BRANCH}; if(cur) body.sha=cur.sha;
+        return fetch(API+'/contents/'+enc(path),{method:'PUT',headers:headers(),body:JSON.stringify(body)}).then(function(r){ if(!r.ok) return ghError(r).then(function(e){ throw e; }); }); });
+    }); });
+    return chain;
+  }
+
   // publish
   $('pubBtn').addEventListener('click',function(){
     var names=Object.keys(dirty); if(!names.length) return; var b=this, st=$('pubSt'); b.disabled=true;
+    var pages=!!(dirty.work||dirty.settings);
+    if(pages&&window.ASPages){ var before=JSON.stringify(S().work); window.ASPages.assignSlugs(S().work); if(JSON.stringify(S().work)!==before&&names.indexOf('work')<0) names.push('work'); }
     var chain=Promise.resolve();
     names.forEach(function(n){ chain=chain.then(function(){ msg(st,'','Publishing '+n+'…'); return putFile('data/'+n+'.json',textB64(JSON.stringify(S()[n],null,2)+'\n'),'Update '+n+' from site editor').then(function(){ delete dirty[n]; }); }); });
+    if(pages) chain=chain.then(function(){ return publishPages(st); });
     chain.then(function(){ msg(st,'ok','Published. The live site updates in about a minute.'); toast('Published. Your live site updates in about a minute.'); })
       .catch(function(err){ b.disabled=false; msg(st,'err',(err&&err.message)||'Publishing failed. Try again.'); });
   });

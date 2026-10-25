@@ -10,7 +10,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/74632302-4998-4445-92f7-7bf9792e64c7-mvm8j67o.jpg",
-    "report": ""
+    "report": "",
+    "slug": "maruti-suzuki-india"
   },
   {
     "section": "research",
@@ -23,7 +24,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/a0a94d59-d1b6-4284-90d2-18c21d65e0f9-mvm8jium.jpg",
-    "report": ""
+    "report": "",
+    "slug": "tvs-motor-company"
   },
   {
     "section": "research",
@@ -36,7 +38,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/7ef651d2-fc4f-49b0-8544-a57c32bfc405-mvm8mcaa.jpg",
-    "report": ""
+    "report": "",
+    "slug": "indian-ev-sector"
   },
   {
     "section": "research",
@@ -49,7 +52,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/7e2ff496-a119-454e-aad7-d78dc679750a-mvm8mwqh.jpg",
-    "report": ""
+    "report": "",
+    "slug": "india-auto-sales-tracker"
   },
   {
     "section": "projects",
@@ -62,7 +66,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "mahindra-and-mahindra"
   },
   {
     "section": "projects",
@@ -75,7 +80,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "havells-india"
   },
   {
     "section": "projects",
@@ -88,7 +94,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "bajaj-auto"
   },
   {
     "section": "projects",
@@ -101,7 +108,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "ola-electric-cash-runway"
   },
   {
     "section": "projects",
@@ -114,7 +122,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "the-true-cost-of-venture-debt"
   },
   {
     "section": "projects",
@@ -127,7 +136,8 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "startup-cash-runway"
   },
   {
     "section": "projects",
@@ -140,6 +150,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": ""
+    "report": "",
+    "slug": "financial-model-maker"
   }
 ]

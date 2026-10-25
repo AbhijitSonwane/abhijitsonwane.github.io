@@ -319,3 +319,24 @@ label.mini:focus-within{outline:2px solid var(--blue);outline-offset:2px}
 .login input{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;font-size:15px;width:100%;min-width:0}
 .login ol{margin:0;padding-left:18px;font-size:14px;color:var(--sub);display:grid;gap:4px}
 .editor .ed-sec .secphotos .sp .th{background:var(--mist)}
+
+/* Shareable work pages */
+.detail .wrap{max-width:860px}
+.backlink{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--sub);text-decoration:none;margin-bottom:20px}
+.backlink:hover{color:var(--ink)}
+.detail h1{font-size:clamp(32px,4.4vw,48px);line-height:1.1;margin-top:12px}
+.detail .meta{color:var(--sub);font-size:14px;margin-top:10px}
+.detail .cover{margin-top:24px;border-radius:18px;border:1px solid var(--line);aspect-ratio:16/9}
+.detail .lede{font-size:18px;color:var(--sub);margin-top:22px;max-width:62ch}
+.detail .figs{margin-top:18px;max-width:320px}
+.detail .disclaim{margin-top:22px;font-size:13px;color:var(--sub);border-left:3px solid var(--line);padding-left:10px}
+.aboutme{margin-top:44px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--mist);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.aboutme span{color:var(--sub);font-size:14px;flex:1 1 260px}
+.aboutme a{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--blue);text-decoration:none}
+.card h3 a{text-decoration:none;color:inherit}
+.card h3 a:hover{color:var(--blue)}
+.card h3 a::after{content:"";position:absolute;inset:0}
+.card{position:relative}
+.card .foot .acts{position:relative;z-index:1}
+.detail .writeup{margin-top:20px;max-width:65ch}
+.detail .writeup p{font-size:17px;line-height:1.75;margin:0 0 16px}
