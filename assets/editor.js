@@ -105,6 +105,7 @@
   // ---------- logged-in state ----------
   var editBtn=null;
   function loggedIn(){
+    try{ localStorage.setItem('as-owner','1'); }catch(e){}
     var ol=$('ownerLogin'); ol.textContent='Log out';
     if(!editBtn){ editBtn=el('button','btn btn-light btn-sm','Edit site'); editBtn.type='button'; editBtn.addEventListener('click',openEditor);
       var nr=document.querySelector('.nav-r'); nr.insertBefore(editBtn,nr.firstChild); }
@@ -156,6 +157,7 @@
   ed.innerHTML='<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="eTitle">'
    +'<div class="sheet-head"><h2 id="eTitle" style="font-size:26px">Edit your site</h2><button class="btn btn-light btn-sm" id="eClose" type="button">Close</button></div>'
    +'<p class="note">Changes show on the page right away. Press <b>Publish</b> to put them live for everyone (takes about a minute).</p>'
+   +'<div class="ed-sec"><h3>Visitors and downloads</h3><div id="eStats"></div></div>'
    +'<div class="ed-sec"><h3>Page text</h3><p class="note">Change any fixed text on the page. Clear a box to go back to the original text.</p><div id="eText" style="display:grid;gap:12px"></div></div>'
    +'<div class="ed-sec"><h3>Your photos and resume</h3><div class="f">'
    +'<div class="two"><label><span>Main photo (top of the page)</span><input id="eHero" type="file" accept=".jpg,.jpeg,.png,.webp"></label><label><span>About photo</span><input id="eAbout" type="file" accept=".jpg,.jpeg,.png,.webp"></label></div>'
@@ -403,7 +405,65 @@
     });
   }
 
-  function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); renderResumeEd(); renderTextEd(); }
+
+  // visitors and downloads (Supabase)
+  var SB=null, sbTok=null; try{ sbTok=sessionStorage.getItem('as-sb'); }catch(e){}
+  function sbCfg(){ if(SB) return Promise.resolve(SB); return fetch('data/analytics.json?'+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; }).then(function(c){ if(c&&c.url&&c.key){ SB=c; SB.url=SB.url.replace(/\/+$/,''); } return SB; }).catch(function(){ return null; }); }
+  function sbLogin(email,pw){ return fetch(SB.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SB.key,'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})})
+    .then(function(r){ return r.json().then(function(j){ if(!r.ok||!j.access_token) throw new Error('Wrong email or password for your stats account.'); return j.access_token; }); }); }
+  function sbEvents(){ return fetch(SB.url+'/rest/v1/events?select=*&order=created_at.desc&limit=2000',{headers:{'apikey':SB.key,'Authorization':'Bearer '+sbTok},cache:'no-store'})
+    .then(function(r){ if(r.status===401){ sbTok=null; try{ sessionStorage.removeItem('as-sb'); }catch(e){} throw new Error('expired'); } if(!r.ok) throw new Error('Couldn\'t load stats ('+r.status+').'); return r.json(); }); }
+  var NAMES={visit:'Visited',resume:'Downloaded resume',report:'Opened report',link:'Opened link',copy:'Copied contact'};
+  function renderStats(){
+    var box=$('eStats'); box.textContent=''; box.appendChild(el('p','note','Loading…'));
+    sbCfg().then(function(c){
+      box.textContent='';
+      if(!c){ box.appendChild(el('p','note','Not connected yet. Finish the Supabase setup steps, then send Claude your project URL and publishable key.')); return; }
+      if(!sbTok) return statsLogin(box);
+      box.appendChild(el('p','note','Loading…'));
+      sbEvents().then(function(rows){ box.textContent=''; statsView(box,rows); }).catch(function(err){ box.textContent=''; if(err.message==='expired') return statsLogin(box); box.appendChild(el('p','status err',err.message)); });
+    });
+  }
+  function statsLogin(box){
+    var f=el('form','f'); f.appendChild(el('p','note','Log in with the stats account you created in Supabase.'));
+    var two=el('div','two');
+    var l1=el('label'); l1.appendChild(el('span',null,'Email')); var em=el('input'); em.type='email'; em.autocomplete='username'; em.required=true; l1.appendChild(em); two.appendChild(l1);
+    var l2=el('label'); l2.appendChild(el('span',null,'Password')); var pw=el('input'); pw.type='password'; pw.autocomplete='current-password'; pw.required=true; l2.appendChild(pw); two.appendChild(l2);
+    f.appendChild(two); var st=el('p','status'); f.appendChild(st);
+    var b=el('button','btn btn-dark btn-sm','Show my stats'); b.type='submit'; b.style.justifySelf='start'; f.appendChild(b);
+    f.addEventListener('submit',function(e){ e.preventDefault(); b.disabled=true; msg(st,'','Logging in…');
+      sbLogin(em.value.trim(),pw.value).then(function(t){ sbTok=t; try{ sessionStorage.setItem('as-sb',t); }catch(x){} renderStats(); }).catch(function(err){ b.disabled=false; msg(st,'err',err.message); }); });
+    box.appendChild(f);
+  }
+  function statsView(box,rows){
+    var now=Date.now(), D=864e5;
+    function within(r,days){ return now-new Date(r.created_at).getTime()<=days*D; }
+    function count(type,days){ return rows.filter(function(r){ return r.type===type&&(!days||within(r,days)); }).length; }
+    function uniq(days){ var u={}; rows.forEach(function(r){ if(r.type==='visit'&&within(r,days)&&r.visitor) u[r.visitor]=1; }); return Object.keys(u).length; }
+    var grid=el('div'); grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px';
+    [['Visits, last 7 days',count('visit',7)],['Visits, last 30 days',count('visit',30)],['Different people, 30 days',uniq(30)],['Resume downloads, 30 days',count('resume',30)],['Resume downloads, all time',count('resume')],['Reports opened, 30 days',count('report',30)]].forEach(function(t){
+      var c=el('div'); c.style.cssText='background:var(--mist);border-radius:12px;padding:12px 14px';
+      c.appendChild(el('div','note',t[0])); var n=el('div',null,String(t[1])); n.style.cssText='font-family:var(--head);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums'; c.appendChild(n); grid.appendChild(c); });
+    box.appendChild(grid);
+    var src={}; rows.forEach(function(r){ if(r.type==='visit'&&within(r,30)) src[r.source||'direct']=(src[r.source||'direct']||0)+1; });
+    var keys=Object.keys(src).sort(function(a,b){ return src[b]-src[a]; });
+    var h=el('h4',null,'Where visitors came from (30 days)'); h.style.cssText='margin:16px 0 6px;font-size:15px'; box.appendChild(h);
+    box.appendChild(el('p','note',keys.length?keys.map(function(k){ return k+': '+src[k]; }).join(' · '):'No visits yet.'));
+    var h2=el('h4',null,'Recent activity'); h2.style.cssText='margin:16px 0 6px;font-size:15px'; box.appendChild(h2);
+    var list=el('div','list');
+    rows.slice(0,40).forEach(function(r){ var row=el('div','row'), info=el('div');
+      info.appendChild(el('div','t',(NAMES[r.type]||r.type)+(r.label&&r.type!=='visit'?': '+r.label:'')));
+      var when=new Date(r.created_at).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+      info.appendChild(el('div','c',[when,r.source,r.device,(r.tz||'').split('/').pop().replace(/_/g,' ')].filter(Boolean).join(' · ')));
+      row.appendChild(info); list.appendChild(row); });
+    if(!rows.length) list.appendChild(el('p','note','Nothing yet. Share your site link and visits will show up here.'));
+    box.appendChild(list);
+    var a=el('div','row-actions'); a.style.cssText='justify-content:flex-start;margin-top:10px';
+    var rf=el('button','btn btn-light btn-sm','Refresh'); rf.type='button'; rf.addEventListener('click',renderStats); a.appendChild(rf); box.appendChild(a);
+    box.appendChild(el('p','note','Your own visits are not counted on any device where you have logged in.'));
+  }
+
+  function renderAll(){ if(!S().settings.photos) S().settings.photos={}; renderSec(); renderCities(); renderGal(); renderWork(); renderBlogs(); renderResumeEd(); renderTextEd(); renderStats(); }
 
   // publish
   $('pubBtn').addEventListener('click',function(){
