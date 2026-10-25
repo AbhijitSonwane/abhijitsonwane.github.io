@@ -2,20 +2,6 @@
   {
     "section": "research",
     "category": "Company Report",
-    "title": "Maruti Suzuki India",
-    "summary": "Initiating coverage: industry context, three-statement forecast, DCF valuation and peer multiples.",
-    "date": "",
-    "tags": "",
-    "keyNumber": "",
-    "keyLabel": "",
-    "link": "",
-    "cover": "/media/images/74632302-4998-4445-92f7-7bf9792e64c7-mvm8j67o.jpg",
-    "report": "",
-    "slug": "maruti-suzuki-india"
-  },
-  {
-    "section": "research",
-    "category": "Company Report",
     "title": "TVS Motor Company",
     "summary": "Initiating coverage valuing the company two ways, by DCF and by P/E multiples, and reconciling the results.",
     "date": "",
@@ -24,8 +10,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/a0a94d59-d1b6-4284-90d2-18c21d65e0f9-mvm8jium.jpg",
-    "report": "",
-    "slug": "tvs-motor-company"
+    "report": ""
   },
   {
     "section": "research",
@@ -38,8 +23,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/7ef651d2-fc4f-49b0-8544-a57c32bfc405-mvm8mcaa.jpg",
-    "report": "",
-    "slug": "indian-ev-sector"
+    "report": ""
   },
   {
     "section": "research",
@@ -52,8 +36,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "/media/images/7e2ff496-a119-454e-aad7-d78dc679750a-mvm8mwqh.jpg",
-    "report": "",
-    "slug": "india-auto-sales-tracker"
+    "report": ""
   },
   {
     "section": "projects",
@@ -66,8 +49,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": "",
-    "slug": "mahindra-and-mahindra"
+    "report": ""
   },
   {
     "section": "projects",
@@ -80,22 +62,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": "",
-    "slug": "havells-india"
-  },
-  {
-    "section": "projects",
-    "category": "Financial Model",
-    "title": "Bajaj Auto",
-    "summary": "Three-statement financial model with forecast drivers and valuation.",
-    "date": "",
-    "tags": "3-statement",
-    "keyNumber": "",
-    "keyLabel": "",
-    "link": "",
-    "cover": "",
-    "report": "",
-    "slug": "bajaj-auto"
+    "report": ""
   },
   {
     "section": "projects",
@@ -108,8 +75,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": "",
-    "slug": "ola-electric-cash-runway"
+    "report": ""
   },
   {
     "section": "projects",
@@ -122,8 +88,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": "",
-    "slug": "the-true-cost-of-venture-debt"
+    "report": ""
   },
   {
     "section": "projects",
@@ -136,8 +101,7 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": "",
-    "slug": "startup-cash-runway"
+    "report": ""
   },
   {
     "section": "projects",
@@ -150,7 +114,6 @@
     "keyLabel": "",
     "link": "",
     "cover": "",
-    "report": "",
-    "slug": "financial-model-maker"
+    "report": ""
   }
 ]
